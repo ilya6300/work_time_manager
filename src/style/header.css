@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 1%;
+  justify-content: flex-end;
+}
+.nav_btn {
+  font-size: var(--f0);
+  border: 1px solid var(--main_blue_1);
+  width: 130px;
+
+  padding: 8px 0 3px;
+  text-align: center;
+  border-radius: 3px;
+}

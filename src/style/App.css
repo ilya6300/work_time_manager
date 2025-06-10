@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/Montserrat/Montserrat-VariableFont_wght.ttf");
+}
+@import url("zeroling.css");
+@import url("layout.css");
+@import url("public.css");
+@import url("schedule.css");
+@import url("employees.css");
+@import url("timesheet.css");
+@import url("docs.css");
+@import url("ui.css");
+@import url("header.css");
+@import url("media.css");
+@import url("var.css");

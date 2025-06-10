@@ -1,0 +1,35 @@
+.description_container {
+  min-height: 200px;
+  width: 100%;
+  border: 1px solid var(--main_blue_1);
+  padding: 1%;
+  border-radius: 6px;
+  margin-bottom: 1%;
+}
+.btn_upload {
+  cursor: pointer;
+  border: 2px solid white;
+  width: 100%;
+  background: var(--main_blue_1);
+  color: white;
+  font-size: large;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+.btn_upload_container {
+  cursor: pointer;
+  padding: 2px;
+  text-align: center;
+  border: 1px solid var(--main_blue_1);
+  background: var(--main_blue_1);
+  width: 260px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+.list_table_docs {
+  max-width: 1600px;
+  margin: auto;
+  overflow-y: auto;
+  height: 100%;
+}

@@ -1,0 +1,178 @@
+.add_btn {
+  cursor: pointer;
+  border: 1px solid var(--main_blue_1);
+  display: inline-block;
+  padding: 0 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease-in;
+}
+.add_btn::after {
+  content: "+";
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--main_blue_1);
+  transition: all 0.3s ease-in;
+}
+.add_btn:hover {
+  background: var(--main_blue_1);
+}
+.add_btn:hover::after {
+  color: white;
+}
+.background_new {
+  background: #0000001f;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+}
+.anim_modal_container {
+  width: 95vw;
+  height: 95vh;
+  max-width: 700px;
+  max-height: 630px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 0 5px 1px #0000006b;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: modal_drop 1s forwards;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 5%;
+}
+.input_v1_name,
+.select_type_schedule {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 10px;
+  padding: 3px 6px;
+  border: 1px solid var(--main_blue_1);
+  border-radius: 4px;
+}
+.btn_container_modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 40px;
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+}
+.btn_ver_1 {
+  border: 1px solid var(--main_blue_1);
+  padding: 4px 15px;
+  min-width: 100px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+.btn_ver_1:hover {
+  background: var(--main_blue_1);
+  color: white;
+}
+
+.my_btn_check_active_false {
+  margin: 0 8px 0 0;
+  cursor: pointer;
+  display: block;
+  width: 45px;
+  min-width: 45px;
+  height: 22px;
+  border: 1px solid #acacac78;
+  border-radius: 14px;
+  position: relative;
+  background: #bcbbb940;
+}
+.my_btn_check_active_false_span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: #acacac78;
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 6%;
+  transform: translate(0, -50%);
+  transition: all 1s ease;
+  /* animation: btn_check_off_span 1s forwards; */
+}
+.my_btn_check_active_false:hover > .my_btn_check_active_false_span {
+  animation: btn_check_on_span 1s forwards;
+}
+.my_btn_check_active_true {
+  margin: 0 8px 0 0;
+  cursor: pointer;
+  display: block;
+  width: 45px;
+  min-width: 45px;
+  height: 22px;
+  border: 2px solid var(--main_blue_1);
+  border-radius: 14px;
+  box-shadow: 0 0 4px 1px var(--main_blue_1);
+  position: relative;
+  background: #8aa5ff40;
+}
+.my_btn_check_active_true_span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: var(--main_blue_1);
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 57%;
+  transform: translate(0, -50%);
+  box-shadow: 0 0 3px 1px var(--main_blue_1);
+  transition: all 1s ease;
+}
+.my_btn_check_active_true:hover > .my_btn_check_active_true_span {
+  animation: btn_check_off_span 1s forwards;
+}
+.input_v2 {
+  width: 6vw;
+  border: none;
+  background: none;
+  border-bottom: 1px solid var(--main_blue_1);
+}
+.select_v1 {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--main_blue_1);
+  text-align: end;
+  padding: 0 4px 0;
+}
+.row_add_btn_container {
+  padding: 0 0 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.input_standart {
+  border: 1px solid var(--main_blue_1);
+  border-radius: 4px;
+  width: 33vw;
+  padding-left: 5px;
+}
+
+@keyframes modal_drop {
+  0% {
+    top: -50%;
+    rotate: 12deg;
+  }
+}
+@keyframes btn_check_on_span {
+  0% {
+    background: #acacac78;
+  }
+  100% {
+    background: var(--main_blue_1);
+  }
+}

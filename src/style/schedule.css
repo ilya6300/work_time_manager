@@ -1,0 +1,57 @@
+.row_table_schedule {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 3px;
+}
+.row_table_schedule_25 {
+  width: 25%;
+  display: inline-block;
+}
+.row_table_schedule_30 {
+  width: 30%;
+  display: inline-block;
+}
+.row_table_schedule_15 {
+  width: 15%;
+  display: inline-block;
+}
+.row_table_schedule_10 {
+  width: 10%;
+  display: inline-block;
+}
+.list_table_schedule {
+  max-width: 1050px;
+  margin: auto;
+  overflow-y: auto;
+  height: 100%;
+}
+.inpt_time {
+  border: none;
+  border-bottom: 1px solid var(--main_blue_1);
+  margin-left: 15px;
+  padding: 1px 8px 0 20px;
+  background: none;
+  color: var(--main_blue_1);
+}
+.time_text_schedule {
+  border-bottom: 1px solid var(--main_blue_1);
+  margin-left: 15px;
+  padding: 1px 8px 0 20px;
+  color: var(--main_blue_1);
+}
+.row_table_schedule_title {
+  margin-bottom: 20px;
+  border: 1px solid var(--my_lite_grey);
+}
+.schedile_type_inpt_new {
+  width: 100%;
+  max-width: 240px;
+  margin-top: 10px;
+  padding: 3px 6px;
+  border: 1px solid var(--main_blue_1);
+  border-radius: 4px;
+}
+.schedile_type_inpt_new_text {
+  display: inline-block;
+  width: 155px;
+}

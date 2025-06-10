@@ -1,0 +1,54 @@
+.employees_container {
+  max-width: 1450px;
+  margin: auto;
+  height: 100%;
+}
+.row_table_employees {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid var(--my_lite_grey);
+  padding: 10px 8px 3px;
+  cursor: pointer;
+}
+.list_container_emploees {
+  height: 100%;
+}
+.row_table_employees:last-child {
+  border: none;
+}
+.row_table_employees:hover {
+  color: var(--main_blue_1);
+}
+.row_table_employees_name {
+  width: 25%;
+  display: flex;
+  gap: 10px;
+}
+.row_table_employees_schedule {
+  width: 15%;
+}
+.row_table_employees_my_schedule {
+  width: 20%;
+}
+.row_table_employees_active {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+}
+.row_table_employees_tools {
+  width: 10%;
+}
+.list_table_employees {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--my_lite_grey);
+  border-radius: 4px;
+  overflow-y: auto;
+  height: 90%;
+}
+.static_header_row {
+  position: sticky;
+  top: 0;
+  background: #efefef;
+  z-index: 2;
+}

@@ -32,6 +32,7 @@
   justify-content: center; */
 }
 .anim_modal_container {
+  z-index: 1000;
   width: 95vw;
   height: 95vh;
   max-width: 700px;

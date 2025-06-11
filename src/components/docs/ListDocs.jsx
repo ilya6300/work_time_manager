@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import appDate from "../../service/state/app.date";
 import { ItemDocs } from "./ItemDocs";
 
-const ListDocs = observer(() => {
+const ListDocs = observer(({ modalCardVisible }) => {
   const [newDocs, setNewDocs] = useState(false);
 
   return (
@@ -18,16 +18,16 @@ const ListDocs = observer(() => {
         className="row_table_schedule row_table_schedule_title static_header_row"
         style={{ top: "55px" }}
       >
-        <span className="row_table_schedule_30">Сотрудник</span>
+        <span className="row_table_schedule_25">Сотрудник</span>
         <label className="row_table_schedule_30">Период заявления</label>
 
-        <span className="row_table_schedule_30">Описания</span>
-        <span className="row_table_schedule_10">Скачать</span>
+        <span className="row_table_schedule_45">Описания</span>
+        {/* <span className="row_table_schedule_10">Скачать</span> */}
       </li>
       {appDate.docs !== null ? (
         <>
           {appDate.docs.map((d) => (
-            <ItemDocs key={d.id} d={d} />
+            <ItemDocs modalCardVisible={modalCardVisible} key={d.id} d={d} />
           ))}
         </>
       ) : (

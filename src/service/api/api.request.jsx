@@ -160,10 +160,7 @@ class apiRequest {
   postDocumentNoFile = async (data) => {
     console.log(data);
     try {
-      const res = await req.post(
-        "documents/upload_document_info",
-        data
-      );
+      const res = await req.post("documents/upload_document_info", data);
       if (res) {
         console.log(res);
       }
@@ -201,9 +198,9 @@ class apiRequest {
 
   uploadDoc = async (data) => {
     try {
-      const res = await req.post("documents/upload_file", data);
+      const res = await req.post("reports/parsing_n_upload_report", data);
       if (res) {
-        console.log(res);
+        console.log("uploadDoc", res);
       }
     } catch (e) {
       console.error(e);

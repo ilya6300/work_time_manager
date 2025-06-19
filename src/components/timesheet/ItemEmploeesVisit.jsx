@@ -66,6 +66,7 @@ export const ItemEmploeesVisit = observer((props) => {
         setSchedule(scheduleID);
       }
     }
+    return () => emploeesID;
   }, [appDate.employees]);
 
   const uploadDoc = (d) => {

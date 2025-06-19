@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import InputBlockv1 from "../../ui/input/InputBlockv1";
 import appDate from "../../service/state/app.date";
@@ -13,8 +13,9 @@ const DateFilter = observer(({ selectedMonth, monthDate }) => {
 
   const [filterValue, setFilterValue] = useState("");
 
-  useEffect(() => {
+  useMemo(() => {
     appDate.filterName("visits", filterValue);
+    return () => appDate.filterName;
   }, [filterValue]);
 
   return (

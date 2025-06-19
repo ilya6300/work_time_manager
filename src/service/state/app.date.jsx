@@ -1,5 +1,6 @@
 import { makeAutoObservable, toJS } from "mobx";
 import apiRequest from "../api/api.request";
+import appState from "./app.state";
 
 class appDate {
   constructor() {
@@ -126,10 +127,12 @@ class appDate {
         return userCopy;
       });
     this.original_visits = this.visits;
-    console.log(toJS(this.visits));
+    appState.setParameters("loadingTimesheet", true);
+    console.log(toJS(this.visits), data);
   };
 
   filterName = (data, value) => {
+    console.log(data, value);
     if (value.length < 2) {
       return (this[`${data}`] = this[`original_${data}`]);
     } else {
@@ -141,6 +144,46 @@ class appDate {
           (n.supervisor_fullname !== null &&
             n.supervisor_fullname.toLowerCase().includes(value.toLowerCase()))
       ));
+    }
+  };
+
+  filter_value_employees_name = "";
+  filter_value_employees_id_supervisor = 99999;
+
+  filterNameEmployess = (data) => {
+    console.log(
+      "this.filter_value_employees_id_supervisor",
+      this.filter_value_employees_id_supervisor,
+      this.filter_value_employees_id_supervisor,
+      toJS(this.employees)
+    );
+    if (
+      this.filter_value_employees_name.length < 2 &&
+      this.filter_value_employees_id_supervisor === 99999
+    ) {
+      console.log("filterNameEmployess 1");
+      return (this[`${data}`] = this[`original_${data}`]);
+    } else {
+      console.log(this.filter_value_employees_name);
+      return (this[`${data}`] = this[`original_${data}`].filter((n) => {
+        const nameMatch =
+          this.filter_value_employees_name.length >= 2
+            ? n.first_name
+                .toLowerCase()
+                .includes(this.filter_value_employees_name.toLowerCase()) ||
+              n.last_name
+                .toLowerCase()
+                .includes(this.filter_value_employees_name.toLowerCase())
+            : true;
+
+        const supervisorMatch =
+          this.filter_value_employees_id_supervisor !== 99999
+            ? Number(n.supervisor_id) ===
+              Number(this.filter_value_employees_id_supervisor)
+            : true;
+        return nameMatch && supervisorMatch;
+      }));
+      console.log(this[`${data}`]);
     }
   };
 

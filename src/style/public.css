@@ -79,6 +79,9 @@
   display: inline-block;
   width: 130px;
 }
+.h30px {
+  height: 30px;
+}
 .h100 {
   height: 100%;
 }

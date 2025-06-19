@@ -3,8 +3,8 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import apiRequest from "../service/api/api.request";
 import appDate from "../service/state/app.date";
 import { ListEmploeesVisit } from "../components/timesheet/ListEmploeesVisit";
-import InputBlockv1 from "../ui/input/InputBlockv1";
 import DateFilter from "../components/timesheet/DateFilter";
+import appState from "../service/state/app.state";
 
 export const Timesheet = observer(() => {
   const currentDate = new Date();
@@ -34,6 +34,7 @@ export const Timesheet = observer(() => {
   ]);
 
   const selectedMonth = (id) => {
+    appState.setParameters("loadingTimesheet", false);
     const prevMonthDate = monthDate.map((m) => {
       if (m.id === id) {
         appDate.setParameters("mount", m.id);
@@ -43,7 +44,6 @@ export const Timesheet = observer(() => {
       }
     });
     setMonthDate(prevMonthDate);
-
     const daysInMonth = new Date(appDate.year, id + 1, 0).getDate();
     appDate.setParameters("days_count", daysInMonth);
     setLoadMonth(true);
@@ -90,13 +90,15 @@ export const Timesheet = observer(() => {
 
   useEffect(() => {
     getActiveDate();
+    return () => getActiveDate;
   }, [appDate.year]);
 
-  useEffect(() => {}, [appDate.hover_day]);
+  // useEffect(() => {}, [appDate.hover_day]);
 
   useEffect(() => {
     createWorkCalendar();
     setLoadMonth(false);
+    return () => createWorkCalendar;
   }, [appDate.mount, loadMonth]);
 
   const getActiveDate = () => {
@@ -122,7 +124,7 @@ export const Timesheet = observer(() => {
   return (
     <div className="tabel_container">
       <DateFilter selectedMonth={selectedMonth} monthDate={monthDate} />
-      <div className="tabel_container_border">
+      <div className="tabel_container_border name_visitor_row_list">
         {/* <Calendar /> */}
         <ListEmploeesVisit workCalendar={workCalendar} />
       </div>

@@ -52,3 +52,10 @@
   background: #efefef;
   z-index: 2;
 }
+.filter_bar_employees {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+  margin-right: 15px;
+  height: 100%;
+}

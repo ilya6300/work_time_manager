@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import apiRequest from "../service/api/api.request";
 import appDate from "../service/state/app.date";
 import { ListTableEmployees } from "../components/employees/ListTableEmployees";
 import { observer } from "mobx-react-lite";
 
 export const Employees = observer(() => {
+  const [filterValue, setFilterValue] = useState("");
+  const [supervisorSelect, setSuervisorSelect] = useState(99999);
+
   const getList = async () => {
     await apiRequest.getEmpoyeesList();
   };
@@ -12,6 +15,8 @@ export const Employees = observer(() => {
   useEffect(() => {
     getList();
   }, []);
+
+
 
   const removeSchedule = async (e) => {
     console.log(e);
@@ -23,7 +28,9 @@ export const Employees = observer(() => {
   if (appDate.employees !== null) {
     return (
       <div className="employees_container">
-        <ListTableEmployees removeSchedule={removeSchedule} />
+        <ListTableEmployees
+          removeSchedule={removeSchedule}
+        />
       </div>
     );
   }

@@ -16,10 +16,9 @@ export const Employees = observer(() => {
     getList();
   }, []);
 
-
-
   const removeSchedule = async (e) => {
     console.log(e);
+    apiRequest.removeEmployee(e.id);
   };
 
   if (appDate.employees === null) {
@@ -28,9 +27,7 @@ export const Employees = observer(() => {
   if (appDate.employees !== null) {
     return (
       <div className="employees_container">
-        <ListTableEmployees
-          removeSchedule={removeSchedule}
-        />
+        <ListTableEmployees removeSchedule={removeSchedule} />
       </div>
     );
   }

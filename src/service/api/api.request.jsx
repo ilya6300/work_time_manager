@@ -68,6 +68,18 @@ class apiRequest {
     }
   };
 
+  removeEmployee = async (id) => {
+    try {
+      const res = await req.delete(`employee/${id}`);
+      if (res) {
+        await this.getEmpoyeesList();
+      }
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // Графики
   getSchedule = async () => {
     try {

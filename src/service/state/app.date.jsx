@@ -131,6 +131,10 @@ class appDate {
     console.log(toJS(this.visits), data);
   };
 
+  filter_value_employees_name = "";
+  filter_value_docs_name = "";
+  filter_value_employees_id_supervisor = 99999;
+
   filterName = (data, value) => {
     console.log(data, value);
     if (value.length < 2) {
@@ -147,8 +151,21 @@ class appDate {
     }
   };
 
-  filter_value_employees_name = "";
-  filter_value_employees_id_supervisor = 99999;
+  filterDocs = (data, value) => {
+    console.log(data, value);
+    if (value.length < 2) {
+      return (this[`${data}`] = this[`original_${data}`]);
+    } else {
+      console.log(value);
+      return (this[`${data}`] = this[`original_${data}`].filter(
+        (n) =>
+          n.emploee_name.toLowerCase().includes(value.toLowerCase()) ||
+          n.start.toLowerCase().includes(value.toLowerCase()) ||
+          n.end.toLowerCase().includes(value.toLowerCase()) ||
+          n.description.toLowerCase().includes(value.toLowerCase())
+      ));
+    }
+  };
 
   filterNameEmployess = (data) => {
     console.log(
@@ -183,7 +200,6 @@ class appDate {
             : true;
         return nameMatch && supervisorMatch;
       }));
-      console.log(this[`${data}`]);
     }
   };
 

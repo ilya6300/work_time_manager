@@ -1,10 +1,12 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 import BtnVer1 from "../ui/btn/BtnVer1";
 import ListDocs from "../components/docs/ListDocs";
 import apiRequest from "../service/api/api.request";
 import { observer } from "mobx-react-lite";
 import BackFixModal from "../ui/modal/BackFixModal";
 import { saveAs } from "file-saver";
+import InputBlockv1 from "../ui/input/InputBlockv1";
+import appDate from "../service/state/app.date";
 
 export const Docs = observer(() => {
   const [newExport, setNewExport] = useState(false);
@@ -65,6 +67,11 @@ export const Docs = observer(() => {
     );
   };
 
+  useMemo(() => {
+    appDate.filterDocs("docs", appDate.filter_value_docs_name);
+    // return () => appDate.filterName;
+  }, [appDate.filter_value_docs_name]);
+
   return (
     <div className="h100">
       {modalCard ? (
@@ -102,6 +109,14 @@ export const Docs = observer(() => {
         type="file"
       />
       <div className="tabs">
+        <InputBlockv1
+          value={appDate.filter_value_docs_name}
+          onChange={(e) =>
+            appDate.setParameters("filter_value_docs_name", e.target.value)
+          }
+          placeholder="Поиск по сотруднику, периоду и описанию"
+          cls="h30px"
+        />
         <BtnVer1
           onClick={() => refInpt.current.click()}
           name="Загрузить тебель"

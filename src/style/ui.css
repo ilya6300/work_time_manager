@@ -55,10 +55,12 @@
 .select_type_schedule {
   width: 100%;
   max-width: 400px;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   padding: 3px 6px;
   border: 1px solid var(--main_blue_1);
   border-radius: 4px;
+  height: 100%;
+  max-height: 40px;
 }
 .btn_container_modal {
   display: flex;
@@ -69,6 +71,7 @@
   right: 40px;
 }
 .btn_ver_1 {
+  min-height: 35px;
   border: 1px solid var(--main_blue_1);
   padding: 4px 15px;
   min-width: 100px;
@@ -80,7 +83,19 @@
   background: var(--main_blue_1);
   color: white;
 }
-
+.btn_remove_txt {
+  min-height: 35px;
+  border: 1px solid var(--error);
+  padding: 4px 15px;
+  min-width: 100px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+.btn_remove_txt:hover {
+  background: var(--error);
+  color: white;
+}
 .my_btn_check_active_false {
   margin: 0 8px 0 0;
   cursor: pointer;

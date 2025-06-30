@@ -62,7 +62,7 @@ const NewSchedule = ({ setNewSchedule }) => {
   };
 
   return (
-    <BackFixModal>
+    <BackFixModal funcClosed={setNewSchedule}>
       <h2 className="title_v2">Создание нового расписания сотрудника</h2>
       <Input_v1
         title="Наименование графика (должно быть уникальным)"

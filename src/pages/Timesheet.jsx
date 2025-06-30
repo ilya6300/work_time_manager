@@ -65,7 +65,15 @@ export const Timesheet = observer(() => {
       const d = new Date(`${appDate.year}-${mm}-${dd}`);
       calendar = [
         ...calendar,
-        { day: String(dd), dayWeek: week[d.getDay()], dayWeekID: d.getDay() },
+        {
+          day: String(dd),
+          dayWeek: week[d.getDay()],
+          dayWeekID: d.getDay(),
+          dayOff:
+            week[d.getDay()] === "Вс" || week[d.getDay()] === "Сб"
+              ? true
+              : false,
+        },
       ];
     }
     let mount = appDate.mount + 1;

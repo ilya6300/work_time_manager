@@ -11,10 +11,6 @@ export const NewDocs = observer(({ setNewDocs }) => {
   const [endDate, setEndDate] = useState("");
 
   const changeStartDate = (e) => {
-    console.log(
-      e.target.value,
-      new Date(`${e.target.value.replace(/T/, "\b")} UTC`).toISOString()
-    );
     setStartDate(e.target.value);
     appDate.setNewDocs(
       "start",
@@ -72,7 +68,7 @@ export const NewDocs = observer(({ setNewDocs }) => {
 
   if (appDate.employees !== null) {
     return (
-      <BackFixModal>
+      <BackFixModal funcClosed={setNewDocs}>
         <h2 className="title_v2">Добавить документ</h2>
         <InputBlockv1
           onInput={handleInputChange}

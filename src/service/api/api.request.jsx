@@ -194,6 +194,29 @@ class apiRequest {
     }
   };
 
+  updateDocumentFile = async (file) => {
+    try {
+      const res = await req.post("documents/upload_file", file);
+      if (res) {
+        console.log(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  updateDocumentNoFile = async (obj, id) => {
+    try {
+      const res = await req.patch(`documents/document_info/${id}`, obj);
+      if (res) {
+        console.log(res);
+        return res;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   downloadDocID = async (id) => {
     try {
       const res = await req(`documents/document/${id}`, {
@@ -214,6 +237,29 @@ class apiRequest {
       if (res) {
         console.log("uploadDoc", res);
       }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  getIdFile = async (id) => {
+    try {
+      const res = await req.post("documents/storage/ids_by_document_id", {
+        document_id: id,
+      });
+      if (res) {
+        console.log(res.data);
+        return res.data;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  removeDoc = async (id) => {
+    try {
+      const res = await req.delete(`documents/${id}`);
+      return res
     } catch (e) {
       console.error(e);
     }

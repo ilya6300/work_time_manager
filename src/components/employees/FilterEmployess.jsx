@@ -33,7 +33,6 @@ export const FilterEmployess = observer(() => {
           </option>
         ))}
       </select>
-      <span></span>
       <InputBlockv1
         value={appDate.filter_value_employees_name}
         onChange={(e) =>

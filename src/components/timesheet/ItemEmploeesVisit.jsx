@@ -150,7 +150,7 @@ export const ItemEmploeesVisit = observer((props) => {
   return (
     <div className="name_visitor_row_container">
       {visibleModalDoc ? (
-        <BackFixModal>
+        <BackFixModal funcClosed={setVisibleModalDoc}>
           <h2 className="title_v2">Добавить документ</h2>
           <li>Сотрудник: {name}</li>
           <li className="row_item_emploee_doc_modal">

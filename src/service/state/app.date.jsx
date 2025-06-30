@@ -136,23 +136,46 @@ class appDate {
   filter_value_employees_id_supervisor = 99999;
 
   filterName = (data, value) => {
-    console.log(data, value);
-    if (value.length < 2) {
+    if (
+      value.length < 2 &&
+      this.filter_value_employees_id_supervisor === 99999
+    ) {
+      console.log("filterNameEmployess 1");
       return (this[`${data}`] = this[`original_${data}`]);
     } else {
       console.log(value);
-      return (this[`${data}`] = this[`original_${data}`].filter(
-        (n) =>
-          n.employer_fullname.toLowerCase().includes(value.toLowerCase()) ||
-          n.schedule_type.toLowerCase().includes(value.toLowerCase()) ||
-          (n.supervisor_fullname !== null &&
-            n.supervisor_fullname.toLowerCase().includes(value.toLowerCase()))
-      ));
+      return (this[`${data}`] = this[`original_${data}`].filter((n) => {
+        const nameMatch =
+          value.length >= 2
+            ? n.employer_fullname.toLowerCase().includes(value.toLowerCase()) ||
+              n.schedule_type.toLowerCase().includes(value.toLowerCase())
+            : true;
+
+        const supervisorMatch =
+          this.filter_value_employees_id_supervisor !== 99999
+            ? Number(n.supervisor_id) ===
+              Number(this.filter_value_employees_id_supervisor)
+            : true;
+        return nameMatch && supervisorMatch;
+      }));
     }
+    // console.log(data, value);
+    // if (value.length < 2) {
+    //   return (this[`${data}`] = this[`original_${data}`]);
+    // } else {
+    //   console.log(value);
+    //   return (this[`${data}`] = this[`original_${data}`].filter(
+    //     (n) =>
+    //       n.employer_fullname.toLowerCase().includes(value.toLowerCase()) ||
+    //       n.schedule_type.toLowerCase().includes(value.toLowerCase()) ||
+    //       (n.supervisor_fullname !== null &&
+    //         n.supervisor_fullname.toLowerCase().includes(value.toLowerCase()))
+    //   ));
+    // }
   };
 
   filterDocs = (data, value) => {
-    console.log(data, value);
+    console.log(data, value, toJS(this[`original_${data}`]));
     if (value.length < 2) {
       return (this[`${data}`] = this[`original_${data}`]);
     } else {
@@ -160,8 +183,7 @@ class appDate {
       return (this[`${data}`] = this[`original_${data}`].filter(
         (n) =>
           n.emploee_name.toLowerCase().includes(value.toLowerCase()) ||
-          n.start.toLowerCase().includes(value.toLowerCase()) ||
-          n.end.toLowerCase().includes(value.toLowerCase()) ||
+          n.date_doc.toLowerCase().includes(String(value).toLowerCase()) ||
           n.description.toLowerCase().includes(value.toLowerCase())
       ));
     }
@@ -214,6 +236,15 @@ class appDate {
         );
         if (emploeesID) {
           docsCopy.emploee_name = `${emploeesID.last_name} ${emploeesID.first_name}`;
+          docsCopy.date_doc = `${new Date(
+            d.start
+          ).toLocaleDateString()} ${new Date(d.start)
+            .toLocaleTimeString()
+            .replace(/:\d\d$/, "")} ${new Date(
+            d.end
+          ).toLocaleDateString()} ${new Date(d.start)
+            .toLocaleTimeString()
+            .replace(/:\d\d$/, "")}`;
         }
         return docsCopy;
       });

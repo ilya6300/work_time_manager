@@ -13,12 +13,13 @@ export const ItemDocs = (props) => {
       <span className="row_table_schedule_25">{props.d.emploee_name}</span>
       <label className="row_table_schedule_30">
         <span>
-          {new Date(props.d.start).toLocaleDateString()},{" "}
-          {new Date(props.d.start).toLocaleTimeString()}-
+          c: {new Date(props.d.start).toLocaleDateString()},{" "}
+          {new Date(props.d.start).toLocaleTimeString().replace(/:\d\d$/, "")}{" "}
+          по:{" "}
         </span>
         <span>
           {new Date(props.d.end).toLocaleDateString()},{" "}
-          {new Date(props.d.start).toLocaleTimeString()}
+          {new Date(props.d.start).toLocaleTimeString().replace(/:\d\d$/, "")}
         </span>
       </label>
 

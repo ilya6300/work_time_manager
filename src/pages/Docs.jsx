@@ -3,16 +3,18 @@ import BtnVer1 from "../ui/btn/BtnVer1";
 import ListDocs from "../components/docs/ListDocs";
 import apiRequest from "../service/api/api.request";
 import { observer } from "mobx-react-lite";
-import BackFixModal from "../ui/modal/BackFixModal";
+
 import { saveAs } from "file-saver";
 import InputBlockv1 from "../ui/input/InputBlockv1";
 import appDate from "../service/state/app.date";
+import { DocumentCadr } from "../components/docs/DocumentCadr";
 
 export const Docs = observer(() => {
   const [newExport, setNewExport] = useState(false);
 
   const [modalCard, setModalCard] = useState(false);
   const [docObj, setDocObj] = useState(null);
+  const [docFileID, seDocFileID] = useState(null);
   const [fileObj, setFileObj] = useState(null);
   const [downloadFlag, setDownloadFlag] = useState(false);
 
@@ -30,14 +32,19 @@ export const Docs = observer(() => {
   const modalCardVisible = async (e) => {
     setDocObj(e);
     setModalCard(true);
-    const res = await apiRequest.downloadDocID(e.id);
-    console.log("downloadDocID", res);
-    if (res) {
-      setFileObj(res);
+    const resFileID = await apiRequest.getIdFile(e.id);
+    console.log("resFileID", resFileID, e);
+    if (resFileID.length !== 0) {
+      console.log(resFileID);
+      // const fileID = await apiRequest.downloadDocID(resFileID.data[0]);
+      setFileObj(await apiRequest.downloadDocID(resFileID.data[0]));
+      // setFileObj(res);
+      // seDocFileID()
       setDownloadFlag(true);
     } else {
       setDownloadFlag(false);
     }
+    // const res = await apiRequest.downloadDocID(e.id);
   };
 
   const getDocs = async () => {
@@ -75,30 +82,12 @@ export const Docs = observer(() => {
   return (
     <div className="h100">
       {modalCard ? (
-        <BackFixModal>
-          <h2 className="title_v2">Документ</h2>
-          <p>{docObj.emploee_name}</p>
-          <p>
-            <span>
-              Действия документа с {new Date(docObj.start).toLocaleDateString()}{" "}
-              {new Date(docObj.start).toLocaleTimeString()}{" "}
-            </span>
-            <span>
-              по {new Date(docObj.end).toLocaleDateString()}{" "}
-              {new Date(docObj.start).toLocaleTimeString()}
-            </span>
-          </p>
-          <p>{docObj.description}</p>
-          <div className="btn_container_modal">
-            {downloadFlag ? (
-              <BtnVer1 name="Скачать" onClick={downloadDoc} />
-            ) : (
-              <span>Файл к документу не прикреплён</span>
-            )}
-
-            <BtnVer1 name="Закрыть" onClick={() => setModalCard(false)} />
-          </div>
-        </BackFixModal>
+        <DocumentCadr
+          downloadDoc={downloadDoc}
+          setModalCard={setModalCard}
+          docObj={docObj}
+          downloadFlag={downloadFlag}
+        />
       ) : (
         <></>
       )}

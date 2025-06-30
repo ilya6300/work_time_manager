@@ -42,6 +42,15 @@
   display: flex;
   flex-direction: row;
 }
+.flx_bw_center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1%;
+}
+.btn_container_modal_text_no_file {
+  font-size: 13px;
+}
 .grey_message_container {
   display: flex;
   align-items: center;
@@ -92,4 +101,9 @@
 .hover_row_v1:hover {
   cursor: pointer;
   border-bottom: 1px solid var(--main_blue_1);
+}
+.posi_abs_left_bottom {
+  position: absolute;
+  left: 40px;
+  bottom: 20px;
 }

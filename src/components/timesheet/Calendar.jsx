@@ -11,6 +11,8 @@ export const Calendar = observer(({ workCalendar }) => {
             <div
               className={`work_days_container_cell `}
               style={{
+                background: w.dayOff ? "#389ea3" : null,
+                color: w.dayOff ? "white" : null,
                 width: `${100 / workCalendar.length}%`,
                 border:
                   appDate.hover_day === w.day

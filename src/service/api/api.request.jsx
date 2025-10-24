@@ -3,36 +3,15 @@ import { req } from "./api.config";
 
 class apiRequest {
   // Cотрудники
-  getEmpoyeesList = async () => {
+  getEmpoyeesList = async (supervisorBoolean, name, supervisorID) => {
     try {
-      const res = await req("employee/all_employee");
+      const res = await req(
+        `employee/all_employee?supervisor=${supervisorBoolean}&${
+          name ? "search=" + name : ""
+        }&${supervisorID ? "supervisor_id=" + supervisorID : ""}`
+      );
       if (res) {
-        console.log(res.data);
-        appDate.setParameters(
-          "employees",
-          res.data.data.sort((a, b) =>
-            a.last_name.localeCompare(b.last_name, "ru")
-          )
-        );
-        appDate.setParameters(
-          "original_employees",
-          res.data.data.sort((a, b) =>
-            a.last_name.localeCompare(b.last_name, "ru")
-          )
-        );
-      }
-    } catch (e) {
-      console.error("getEmpoyeesList", e);
-      appDate.setParameters("employees", undefined);
-    }
-  };
-
-  getSupervisorsList = async () => {
-    try {
-      const res = await req("employee/all_supervisors");
-      if (res) {
-        console.log(res.data);
-        appDate.setParameters("supervisor", res.data.data);
+        return res.data;
       }
     } catch (e) {
       console.error(e);
@@ -43,8 +22,7 @@ class apiRequest {
     try {
       const res = await req.patch(`employee/${id}`, data);
       if (res) {
-        console.log(res.data);
-        await this.getEmpoyeesList();
+        await this.getEmpoyeesList(false);
         return res.data;
       }
     } catch (e) {
@@ -54,14 +32,10 @@ class apiRequest {
 
   postEmployeesID = async (data) => {
     try {
-      console.log(data);
-      const res = await req.post("employee/add_employer", data);
+      const res = await req.post("employee", data);
       if (res) {
-        console.log(res.data);
-        this.getEmpoyeesList();
+        this.getEmpoyeesList(false);
         return res.data;
-      } else {
-        console.log(res);
       }
     } catch (e) {
       console.error(e);
@@ -72,9 +46,10 @@ class apiRequest {
     try {
       const res = await req.delete(`employee/${id}`);
       if (res) {
-        await this.getEmpoyeesList();
+        setTimeout(async () => {
+          await this.getEmpoyeesList(false);
+        }, 1000);
       }
-      console.log(res);
     } catch (e) {
       console.error(e);
     }
@@ -85,8 +60,7 @@ class apiRequest {
     try {
       const res = await req("schedule");
       if (res) {
-        console.log(res.data);
-        appDate.setParameters("schedule", res.data.data);
+        appDate.setParameters("schedule", res.data);
       }
     } catch (e) {
       console.error("getSchedule", e);
@@ -98,7 +72,6 @@ class apiRequest {
     try {
       const res = await req.post("schedule", data);
       if (res) {
-        console.log(res.data);
         await this.getSchedule();
         return res;
       }
@@ -111,10 +84,7 @@ class apiRequest {
     try {
       const res = await req.put(`schedule/${id}`, data);
       if (res) {
-        console.log(res.data);
         return res;
-      } else {
-        console.log("updateSchedule");
       }
     } catch (e) {
       console.error("updateSchedule", e);
@@ -127,26 +97,24 @@ class apiRequest {
       if (res) {
         await this.getSchedule();
       }
-      console.log(res);
     } catch (e) {
       console.error(e);
     }
   };
 
   // Визиты
-
-  getVisits = async (startDate, endDate) => {
-    console.log(startDate, endDate);
+  //encodeURIComponent
+  getVisits = async (startDate, endDate, supervisor, name) => {
     try {
-      const res = await req.post("reports/create_report_json", {
-        start_date: new Date(startDate),
-        end_date: new Date(endDate),
-      });
+      const res = await req(
+        `visit/get_report?is_archived=false&start_date=${startDate}&end_date=${endDate}${
+          supervisor ? "&supervisor_id=" + supervisor : ""
+        }${name?.length > 2 ? "&search=" + encodeURIComponent(name) : ""}`
+      );
       if (res) {
-        console.log("getVisits", res.data);
-        appDate.createStructureVisits(res.data);
+        appDate.createStructureVisits(res.data, name);
       } else {
-        console.log("Не удалось выполнить запрос reports/create_report_json");
+        console.error("Не удалось выполнить запрос visit/get_report");
       }
     } catch (e) {
       console.error(e);
@@ -155,26 +123,11 @@ class apiRequest {
   // Документы
 
   postDocument = async (data) => {
-    console.log(data);
     try {
-      const res = await req.post(
-        "documents/upload_document_info_and_file",
-        data
-      );
+      const res = await req.post("document", data);
       if (res) {
-        console.log(res);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  postDocumentNoFile = async (data) => {
-    console.log(data);
-    try {
-      const res = await req.post("documents/upload_document_info", data);
-      if (res) {
-        console.log(res);
+        this.getDocuments();
+        return res;
       }
     } catch (e) {
       console.error(e);
@@ -183,48 +136,10 @@ class apiRequest {
 
   getDocuments = async () => {
     try {
-      const res = await req("documents");
+      const res = await req("document");
       if (res) {
-        console.log(res.data);
-        appDate.createStructureDocs(res.data.data);
-        // appDate.setParameters("schedule", res.data.data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  updateDocumentFile = async (file) => {
-    try {
-      const res = await req.post("documents/upload_file", file);
-      if (res) {
-        console.log(res.data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  updateDocumentNoFile = async (obj, id) => {
-    try {
-      const res = await req.patch(`documents/document_info/${id}`, obj);
-      if (res) {
-        console.log(res);
-        return res;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  downloadDocID = async (id) => {
-    try {
-      const res = await req(`documents/document/${id}`, {
-        responseType: "blob",
-      });
-      if (res) {
-        console.log(res);
-        return res;
+        appDate.setParameters("docs", res.data);
+        return true;
       }
     } catch (e) {
       console.error(e);
@@ -233,23 +148,9 @@ class apiRequest {
 
   uploadDoc = async (data) => {
     try {
-      const res = await req.post("reports/parsing_n_upload_report", data);
+      const res = await req.post("visit/add_report", data);
       if (res) {
-        console.log("uploadDoc", res);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  getIdFile = async (id) => {
-    try {
-      const res = await req.post("documents/storage/ids_by_document_id", {
-        document_id: id,
-      });
-      if (res) {
-        console.log(res.data);
-        return res.data;
+        console.log("uploadDoc 1", res);
       }
     } catch (e) {
       console.error(e);
@@ -258,8 +159,35 @@ class apiRequest {
 
   removeDoc = async (id) => {
     try {
-      const res = await req.delete(`documents/${id}`);
-      return res
+      const res = await req.delete(`document/${id}`);
+      if (res) {
+        return res;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  getUnknowEmploees = async () => {
+    try {
+      const res = await req("unknown_user");
+      if (res.data.length !== 0) {
+        appDate.setParameters("unknow_emploees", res.data);
+        return res.data;
+      } else {
+        console.log("Новых сотрудников нет");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  removeUnknowID = async (id) => {
+    try {
+      const res = await req.delete(`unknown_user/${id}`);
+      if (res) {
+        this.getUnknowEmploees();
+      }
     } catch (e) {
       console.error(e);
     }

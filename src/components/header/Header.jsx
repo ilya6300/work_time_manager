@@ -1,7 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router";
 
-const Header = () => {
+import appDate from "../../service/state/app.date";
+import { AlertCenter } from "../alert/AlertCenter";
+import { observer } from "mobx-react-lite";
+
+
+const Header = observer(() => {
+
   const btnsNav = [
     {
       name: "Табель",
@@ -22,6 +28,8 @@ const Header = () => {
   ];
   return (
     <div className="header">
+      {appDate.unknow_emploees ? <AlertCenter /> : <></>}
+
       {btnsNav.map((b) => (
         <NavLink key={b.name} className="nav_btn" to={`/${b.link}`}>
           {b.name}
@@ -29,6 +37,6 @@ const Header = () => {
       ))}
     </div>
   );
-};
+});
 
 export default Header;

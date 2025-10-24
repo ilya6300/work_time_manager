@@ -12,11 +12,8 @@ export const Timesheet = observer(() => {
   const currentYear = currentDate.getFullYear();
   const [loadMonth, setLoadMonth] = useState(false);
 
-  // const [filterValue, setFilterValue] = useState("");
 
   const [workCalendar, setWorkCalendar] = useState([]);
-
-  // const yearData = ["2025", "2024"];
 
   const [monthDate, setMonthDate] = useState([
     { id: 0, month: "Январь", active: false, select: false },
@@ -100,8 +97,6 @@ export const Timesheet = observer(() => {
     getActiveDate();
     return () => getActiveDate;
   }, [appDate.year]);
-
-  // useEffect(() => {}, [appDate.hover_day]);
 
   useEffect(() => {
     createWorkCalendar();

@@ -8,21 +8,13 @@ import apiRequest from "../../service/api/api.request";
 export const ItemRowSchedule = observer((props) => {
   const typeSchedule = ["2/2", "5/2", "Без посещения"];
   const [edit, setEdit] = useState(false);
-  const [start, setStart] = useState(props.s.start.replace(/:\d\d$/gm, ""));
-  const [end, setEnd] = useState(props.s.end.replace(/:\d\d$/gm, ""));
+  const [start, setStart] = useState(props.s.start);
+  const [end, setEnd] = useState(props.s.end);
 
-  const [startHour, setStartHour] = useState(
-    props.s.start.replace(/:\d\d:\d\d$/gm, "")
-  );
-  const [startMinute, setStartMinute] = useState(
-    props.s.start.replace(/(^\d\d:)|(:\d\d$)/gm, "")
-  );
-  const [endHour, setEndHour] = useState(
-    props.s.end.replace(/:\d\d:\d\d$/gm, "")
-  );
-  const [endMinute, setEndMinute] = useState(
-    props.s.end.replace(/(^\d\d:)|(:\d\d$)/gm, "")
-  );
+  const [startHour, setStartHour] = useState(props.s.start);
+  const [startMinute, setStartMinute] = useState(props.s.start);
+  const [endHour, setEndHour] = useState(props.s.end);
+  const [endMinute, setEndMinute] = useState(props.s.end);
 
   const [type, setType] = useState(props.s.schedule_type);
 
@@ -42,7 +34,6 @@ export const ItemRowSchedule = observer((props) => {
 
   const removeSchedule = async () => {
     await apiRequest.removeScheduleApi(props.s.id);
-   
   };
 
   const saeSchedule = async () => {

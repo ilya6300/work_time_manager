@@ -35,6 +35,9 @@ export const ListTableEmployees = observer(
             <span className="row_table_employees_my_schedule">
               Руководитель
             </span>
+            <span className="row_table_employees_my_schedule">
+              Табель-номер
+            </span>
             <label className="row_table_employees_active">
               Является руководителем
             </label>

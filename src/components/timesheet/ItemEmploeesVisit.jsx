@@ -1,253 +1,196 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import appDate from "../../service/state/app.date";
-import BackFixModal from "../../ui/modal/BackFixModal";
-import BtnVer1 from "../../ui/btn/BtnVer1";
+import { NewDocs } from "../docs/NewDocs";
+import iconDocumentWhite from "../../img/icon/document_white.png";
+import { useNavigate } from "react-router";
 
 export const ItemEmploeesVisit = observer((props) => {
-  const [schedule, setSchedule] = useState(null);
   const [visibleModalDoc, setVisibleModalDoc] = useState(false);
-  const [name, setName] = useState("");
-  const [nameDoc, setNameDoc] = useState("");
-  // const [date, setDate] = useState();
-  const [dateStart, setDateStart] = useState("");
-  const [dateEnd, setDateEnd] = useState("");
-  const [timeStart, setTimeStart] = useState("");
-  const [timeEnd, setTimeEnd] = useState("");
+  const [emploeeObj, setEmploeeObj] = useState(props.v);
   const [dataObj, setDataObj] = useState(null);
+  const navigation = useNavigate();
 
   const result = (r) => {
-    if (r === "absent") {
-      return "Отсутствовал(а)";
+    if (r.status === "absent") {
+      const td = new Date();
+      const fd = new Date(r.visit_date);
+      if (fd.getTime() + 1000 * 60 * 60 * 24 >= td.getTime()) {
+        const ok = "";
+        return ok;
+      }
+      if (emploeeObj.schedule.schedule_type === "5/2") {
+        return "Отсутствовал(а)";
+      }
     }
-    if (r === "left") {
+    if (r.status === "left") {
       return "Ушёл(а) раньше";
     }
-    if (r === "late") {
+    if (r.status === "late") {
       return "Опоздал(а)";
     }
-    if (r === "late_n_left") {
+    if (r.status === "late_n_left") {
       return "Опоздал(а) и ушёл(а) раньше";
+    }
+    if (r.status === "incomplete_information") {
+      return "Нет отметки на выходе или входе";
     }
   };
 
   const calcTimeStyle = (res) => {
     try {
-      if (
-        res.result === "valid" ||
-        (!res.late && !res.left && res.result !== "absent")
-      ) {
+      if (res.status === "valid") {
         const ok = "work_days_container_cell_ok";
         return ok;
       }
       if (
-        res.result === "left" ||
-        res.result === "late_n_left" ||
-        res.result === "late"
+        res.status === "left" ||
+        res.status === "late_n_left" ||
+        res.status === "late"
       ) {
         const error = "work_days_container_cell_error";
         return error;
       }
+      if (res.status === "weekend") {
+        const ok = "work_days_container_cell_weekend";
+        return ok;
+      }
+      if (res.status === "") {
+        const ok = "work_days_container_cell_undefind";
+        return ok;
+      }
+      if (res.status === "incomplete_information") {
+        const ok = "work_days_container_cell_incomplete_information";
+        return ok;
+      }
+      if (res.status === "absent") {
+        const td = new Date();
+        const fd = new Date(res.visit_date);
+        if (fd.getTime() + 1000 * 60 * 60 * 24 >= td.getTime()) {
+          const ok = "work_days_container_cell_undefind";
+          return ok;
+        }
+        if (emploeeObj.schedule.schedule_type === "5/2") {
+          const error = "work_days_container_cell_error";
+          return error;
+        }
+        if (emploeeObj.schedule.schedule_type === "2/2") {
+          const ok = "work_days_container_cell_undefind";
+          return ok;
+        }
+      }
     } catch (e) {
-      //   console.error("calcTimeStyle", e);
+      console.error("calcTimeStyle", e);
     }
   };
 
-  useEffect(() => {
-    if (appDate.employees === null) return;
-    const emploeesID = appDate.employees.find(
-      (e) => e.id === props.v.employer_id
-    );
-    if (emploeesID) {
-      const scheduleID = appDate.schedule.find(
-        (s) => s.id === emploeesID.schedule_id
-      );
-      if (scheduleID) {
-        setSchedule(scheduleID);
-      }
-    }
-    return () => emploeesID;
-  }, [appDate.employees]);
-
   const uploadDoc = (d) => {
-    setDataObj(d);
-    setName(props.v.employer_fullname);
-    appDate.setNewDocs("employer_id", props.v.employer_id);
-    // setDate(new Date(d.date));
-    const dd = new Date(d.date);
-    setDateStart(
-      `${dd.getFullYear()}-${String(dd.getMonth() + 1).padStart(
-        2,
-        "0"
-      )}-${String(dd.getDate()).padStart(2, "0")}`
-    );
-    setDateEnd(
-      `${dd.getFullYear()}-${String(dd.getMonth() + 1).padStart(
-        2,
-        "0"
-      )}-${String(dd.getDate()).padStart(2, "0")}`
-    );
+    if (!emploeeObj.service_number || emploeeObj.service_number === "")
+      return alert(
+        `У ${emploeeObj.last_name} ${emploeeObj.first_name} не заполнен табель-номер, добавить заявление сотруднику невозможно. Измените или присвойте табель-номер.`
+      );
+    let data = d;
+    data.name = `${emploeeObj.last_name} ${emploeeObj.first_name} ${emploeeObj.second_name}`;
+    data.comment = "";
+    data.service_number = emploeeObj.service_number;
+    data.setFuncEmploee = setEmploeeObj;
+    data.emploee = emploeeObj;
+    setDataObj(data);
     setVisibleModalDoc(true);
   };
 
-  const refInptDoc = useRef(null);
-
-  const selectDoc = (e) => {
-    console.log(e.target.files[0].name);
-    console.log(props.v);
-    setNameDoc(e.target.files[0].name);
-    appDate.setNewDocs("file", e.target.files[0]);
-  };
-
-  const calculationLateAndLeft = () => {
-    console.log(
-      "calculationLateAndLeft",
-      timeStart >= schedule.start.replace(/.{3}$/, ""),
-      timeStart,
-      schedule.start.replace(/.{3}$/, "")
+  const goToEmploee = () => {
+    sessionStorage.setItem(
+      "autoFilterEmploee",
+      `${props.v.last_name} ${props.v.first_name} ${props.v.second_name}`
     );
-
-    const visitID = props.v.visits.find((d) => d.date === dataObj.date);
-    if (timeStart >= schedule.start.replace(/.{3}$/, "")) {
-      visitID.late = false;
-    }
-    if (timeEnd >= schedule.end.replace(/.{3}$/, "")) {
-      visitID.left = false;
-    }
-  };
-
-  const createNewDocDay = async () => {
-    console.log(dateStart, dateEnd, timeStart, timeEnd);
-    if (dateStart === "") {
-      return alert("Не выбрана дата начала");
-    }
-    if (dateEnd === "") {
-      return alert("Не выбрана дата окончания");
-    }
-    if (timeStart === "") {
-      return alert("Не выбрано время начала");
-    }
-    if (timeEnd === "") {
-      return alert("Не выбрано время начала");
-    }
-    appDate.setNewDocs(
-      "start",
-      new Date(`${dateStart}, ${timeStart} UTC`).toISOString()
-    );
-    appDate.setNewDocs(
-      "end",
-      new Date(`${dateEnd}, ${timeEnd} UTC`).toISOString()
-    );
-    const createDoc = await appDate.createNewDoc();
-    if (createDoc) {
-      calculationLateAndLeft();
-      console.log(createDoc, "createDoc");
-      appDate.resetNewDocs();
-      setVisibleModalDoc(false);
-    }
+    return navigation("/employees");
   };
 
   return (
     <div className="name_visitor_row_container">
       {visibleModalDoc ? (
-        <BackFixModal funcClosed={setVisibleModalDoc}>
-          <h2 className="title_v2">Добавить документ</h2>
-          <li>Сотрудник: {name}</li>
-          <li className="row_item_emploee_doc_modal">
-            <span className="w130">Дата начала:</span>
-            <input
-              className="inpt_v1"
-              type="date"
-              value={dateStart}
-              onChange={(e) => setDateStart(e.target.value)}
-            />
-            <span> время:</span>{" "}
-            <input
-              className="inpt_v1"
-              value={timeStart}
-              onChange={(e) => setTimeStart(e.target.value)}
-              type="time"
-            />
-          </li>
-          <li className="row_item_emploee_doc_modal">
-            <span className="w130">Дата окончания:</span>
-            <input
-              className="inpt_v1"
-              type="date"
-              value={dateEnd}
-              onChange={(e) => setDateEnd(e.target.value)}
-            />
-            <span> время:</span>{" "}
-            <input
-              className="inpt_v1"
-              value={timeEnd}
-              onChange={(e) => setTimeEnd(e.target.value)}
-              type="time"
-            />
-          </li>
-          <li>
-            <textarea
-              placeholder="В случае необходимости, можете указать комментарий"
-              className="description_container"
-              onChange={(e) =>
-                appDate.setNewDocs("description", e.target.value)
-              }
-            ></textarea>
-            <li>
-              <div>
-                <div className="btn_upload_container">
-                  <button
-                    className="btn_upload"
-                    onClick={() => refInptDoc.current.click()}
-                  >
-                    Файл
-                  </button>
-                </div>
-                <span>{nameDoc}</span>
-              </div>
-            </li>
-          </li>
-          <div className="btn_container_modal">
-            <BtnVer1 name="Создать" onClick={createNewDocDay} />
-            <BtnVer1 name="Закрыть" onClick={() => setVisibleModalDoc(false)} />
-          </div>
-        </BackFixModal>
+        <NewDocs setNewDocs={setVisibleModalDoc} data={dataObj} />
       ) : (
         <></>
       )}
-      <input
-        ref={refInptDoc}
-        onChange={selectDoc}
-        className="hidden"
-        type="file"
-      />
-      <div className="name_visitor_row">
-        <div>{props.v.employer_fullname}</div>
-        <div>{schedule !== null ? schedule.name : "график не найден"}</div>
+      <div onClick={goToEmploee} className="name_visitor_row">
+        <div>{`${emploeeObj.last_name} ${emploeeObj.first_name} ${emploeeObj.second_name}`}</div>
+        <div>
+          {emploeeObj.schedule.name !== null
+            ? emploeeObj.schedule.name
+            : "график не найден"}
+        </div>
       </div>
       <div className="work_days_container">
-        {props.v.visits.map((d) => (
+        {emploeeObj.visits.map((d) => (
           <div
-            onClick={d.result !== "valid" ? () => uploadDoc(d) : null}
+            onClick={
+              d.status !== "valid" || d.documents?.length !== 0
+                ? () => uploadDoc(d)
+                : null
+            }
             className={[`work_days_container_cell ${calcTimeStyle(d)}`]}
             style={{
-              width: `${100 / props.v.visits.length}%`,
+              width: `${100 / emploeeObj.visits.length}%`,
             }}
-            key={d.date}
+            key={d.visit_date}
             onMouseMove={() =>
-              appDate.setParameters("hover_day", d.date.replace(/.{8}/gm, ""))
+              appDate.setParameters(
+                "hover_day",
+                d.visit_date.replace(/.{8}/gm, "")
+              )
             }
             onMouseOut={() => appDate.setParameters("hover_day", "")}
           >
             <span>
-              {d.arrival !== null ? d.arrival.replace(/.{3}$/, "") : ""}
+              {d.start_visit !== null ? d.start_visit.replace(/.{3}$/, "") : ""}
             </span>
             <span>
-              {d.departure !== null ? d.departure.replace(/.{3}$/, "") : ""}
+              {d.end_visit !== null ? d.end_visit.replace(/.{3}$/, "") : ""}
             </span>
-            <span className="work_days_container_cell_result">
-              {result(d.result)}
-            </span>
+            {d.documents &&
+            d.documents.length === 0 &&
+            d.status !== "" &&
+            d.status !== null ? (
+              <span className="work_days_container_cell_result">
+                {result(d)}
+              </span>
+            ) : d?.documents?.length !== 0 &&
+              d.status !== "" &&
+              d.status !== null ? (
+              <div className="work_days_container_cell_doc_icon_container">
+                <img
+                  className="work_days_container_cell_doc_icon"
+                  src={iconDocumentWhite}
+                  alt="документ"
+                />
+                <ul className="work_days_container_cell_result">
+                  <li>
+                    Статус:{" "}
+                    {result(d) !== "" && result(d) ? result(d) : "Учтено"}
+                  </li>
+                  <br />
+                  <li>Документы:</li>
+                  <br />
+                  {d?.documents?.map((img) => (
+                    <ul
+                      key={img.doc_number}
+                      // className="work_days_container_cell_result"
+                    >
+                      <li>{result(d)}</li>
+                      <li>{img.doc_type}</li>
+                      <li>{img.start}</li>
+                      <li>{img.end}</li>
+                      <li>{img.comment}</li>
+                      <br />
+                    </ul>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         ))}
       </div>

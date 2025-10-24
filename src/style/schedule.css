@@ -59,3 +59,12 @@
   display: inline-block;
   width: 155px;
 }
+.flx_date_schedile_container {
+  display: flex;
+  justify-content: space-around;
+}
+.flx_time_schedile_container {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}

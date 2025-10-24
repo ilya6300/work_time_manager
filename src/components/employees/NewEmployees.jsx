@@ -37,6 +37,7 @@ export const NewEmployees = ({ setNewEmploees }) => {
     supervisor_id: null,
     is_supervisor: supervisor,
     is_archived: arhive,
+    service_number: "",
     time_zone: "Europe/Moscow",
   });
 
@@ -56,6 +57,12 @@ export const NewEmployees = ({ setNewEmploees }) => {
     }
     if (newEmploeesObj.last_name === "" || !newEmploeesObj.last_name) {
       return alert("Не указана фамилия сотрудника");
+    }
+    if (
+      newEmploeesObj.service_number === "" ||
+      !newEmploeesObj.service_number
+    ) {
+      return alert("Не указан табель сотрудника");
     }
     if (newEmploeesObj.second_name === "" || !newEmploeesObj.second_name) {
       setNewEmploeeys({ ...newEmploeesObj, second_name: "" });
@@ -97,6 +104,17 @@ export const NewEmployees = ({ setNewEmploees }) => {
           setNewEmploeeys({ ...newEmploeesObj, last_name: e.target.value })
         }
         value={newEmploeesObj.last_name}
+      />
+      <Input_v1
+        title="Табель-номер из 1С"
+        placeholder="12345"
+        onChange={(e) =>
+          setNewEmploeeys({
+            ...newEmploeesObj,
+            service_number: e.target.value,
+          })
+        }
+        value={newEmploeesObj.service_number}
       />
       <select
         onChange={(e) => {

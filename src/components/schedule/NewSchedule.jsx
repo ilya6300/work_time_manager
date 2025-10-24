@@ -12,11 +12,9 @@ const NewSchedule = ({ setNewSchedule }) => {
 
   const [newScheduleObj, setNewScheduleObj] = useState({
     name: "",
-    startHour: "",
-    startMinute: "",
-    endHour: "",
-    endMinute: "",
-    scheduleType: "",
+    start: "",
+    end: "",
+    schedule_type: "",
   });
 
   const createTypeSchedule = async () => {
@@ -29,7 +27,7 @@ const NewSchedule = ({ setNewSchedule }) => {
     if (newScheduleObj.endMinute === "") {
       return setMessage("Время окончания графика не заполнено");
     }
-    if (newScheduleObj.scheduleType === "") {
+    if (newScheduleObj.schedule_type === "") {
       return setMessage("Тип графика не выбран");
     }
     const res = await apiRequest.postTypeSchedule(newScheduleObj);
@@ -46,8 +44,7 @@ const NewSchedule = ({ setNewSchedule }) => {
     setTimeStart(value);
     setNewScheduleObj({
       ...newScheduleObj,
-      startHour: String(value.match(/^\d\d/)),
-      startMinute: String(value.match(/\d\d$/)),
+      start: e.target.value,
     });
   };
 
@@ -56,8 +53,7 @@ const NewSchedule = ({ setNewSchedule }) => {
     setTimeEnd(value);
     setNewScheduleObj({
       ...newScheduleObj,
-      endHour: String(value.match(/^\d\d/)),
-      endMinute: String(value.match(/\d\d$/)),
+      end: e.target.value,
     });
   };
 
@@ -76,7 +72,7 @@ const NewSchedule = ({ setNewSchedule }) => {
         onChange={(e) => {
           setNewScheduleObj({
             ...newScheduleObj,
-            scheduleType: e.target.value,
+            schedule_type: e.target.value,
           });
         }}
         className="select_type_schedule"

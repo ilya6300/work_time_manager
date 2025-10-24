@@ -1,4 +1,4 @@
-import {  useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import { Docs } from "./pages/Docs";
 import { Employees } from "./pages/Employees";
 import LayOut from "./pages/LayOut";
@@ -9,17 +9,20 @@ import { Route, Routes } from "react-router";
 import apiRequest from "./service/api/api.request";
 import appDate from "./service/state/app.date";
 import { observer } from "mobx-react-lite";
+import { UnknowEmploees } from "./components/timesheet/UnknowEmploees";
 
 const App = observer(() => {
-
-
   const getStart = async () => {
     await apiRequest.getSchedule();
-    await apiRequest.getSupervisorsList();
-    await apiRequest.getEmpoyeesList();
+    appDate.setParameters("employees", await apiRequest.getEmpoyeesList(false));
+    const res = appDate.setParameters(
+      "supervisor",
+      await apiRequest.getEmpoyeesList(true)
+    );
+    if (res) {
+      await apiRequest.getUnknowEmploees();
+    }
   };
-
-
 
   useLayoutEffect(() => {
     getStart();
@@ -34,6 +37,7 @@ const App = observer(() => {
           <Route path="employees" element={<Employees />} />
           <Route path="timetable" element={<Timetable />} />
           <Route path="docs" element={<Docs />} />
+          <Route path="unknow" element={<UnknowEmploees />} />
         </Route>
       </Routes>
     );

@@ -1,58 +1,48 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import BtnVer1 from "../ui/btn/BtnVer1";
 import ListDocs from "../components/docs/ListDocs";
 import apiRequest from "../service/api/api.request";
 import { observer } from "mobx-react-lite";
-
-import { saveAs } from "file-saver";
 import InputBlockv1 from "../ui/input/InputBlockv1";
 import appDate from "../service/state/app.date";
-import { DocumentCadr } from "../components/docs/DocumentCadr";
+import { DocumentCard } from "../components/docs/DocumentCard";
 
 export const Docs = observer(() => {
-  const [newExport, setNewExport] = useState(false);
-
   const [modalCard, setModalCard] = useState(false);
   const [docObj, setDocObj] = useState(null);
-  const [docFileID, seDocFileID] = useState(null);
-  const [fileObj, setFileObj] = useState(null);
-  const [downloadFlag, setDownloadFlag] = useState(false);
-
-  const [tabs, setTabs] = useState([
-    // {
-    //   name: "Документы",
-    //   active: false,
-    // },
-    {
-      name: "Загрузить",
-      active: false,
-    },
-  ]);
 
   const modalCardVisible = async (e) => {
     setDocObj(e);
     setModalCard(true);
-    const resFileID = await apiRequest.getIdFile(e.id);
-    console.log("resFileID", resFileID, e);
-    if (resFileID.length !== 0) {
-      console.log(resFileID);
-      // const fileID = await apiRequest.downloadDocID(resFileID.data[0]);
-      setFileObj(await apiRequest.downloadDocID(resFileID.data[0]));
-      // setFileObj(res);
-      // seDocFileID()
-      setDownloadFlag(true);
-    } else {
-      setDownloadFlag(false);
-    }
-    // const res = await apiRequest.downloadDocID(e.id);
   };
 
   const getDocs = async () => {
-    await apiRequest.getDocuments();
+    const res = await apiRequest.getDocuments();
+    if (res) {
+      const sessionDoc = sessionStorage.getItem("autoFilterDoc");
+      console.log(
+        typeof sessionDoc,
+        sessionDoc,
+        sessionDoc === null,
+        res,
+        appDate.docs
+      );
+      if (sessionDoc === null) return;
+      if (res) {
+        const docID = appDate.docs.find((d) => d?.doc_number === sessionDoc);
+        if (docID) {
+          setTimeout(() => {
+            // sessionStorage.removeItem("autoFilterDoc");
+          }, 1000);
+
+          modalCardVisible(docID);
+        }
+      }
+    }
   };
 
-  useLayoutEffect(() => {
-    getDocs();
+  useEffect(() => {
+    const res = getDocs();
   }, []);
 
   const refInpt = useRef(null);
@@ -63,30 +53,15 @@ export const Docs = observer(() => {
       formData.append("file", e.target.files[0]);
       await apiRequest.uploadDoc(formData);
     }
-    console.log(e.target.files[0]);
   };
-
-  const downloadDoc = async () => {
-    saveAs(
-      new Blob([fileObj.data]),
-      `${docObj.emploee_name} ${docObj.start}-${docObj.end}.${fileObj.headers.file_extention}`,
-      fileObj.headers.file_extention
-    );
-  };
-
-  useMemo(() => {
-    appDate.filterDocs("docs", appDate.filter_value_docs_name);
-    // return () => appDate.filterName;
-  }, [appDate.filter_value_docs_name]);
 
   return (
     <div className="h100">
       {modalCard ? (
-        <DocumentCadr
-          downloadDoc={downloadDoc}
+        <DocumentCard
           setModalCard={setModalCard}
           docObj={docObj}
-          downloadFlag={downloadFlag}
+          setDocObj={setDocObj}
         />
       ) : (
         <></>

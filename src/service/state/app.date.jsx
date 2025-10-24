@@ -1,6 +1,6 @@
 import { makeAutoObservable, toJS } from "mobx";
-import apiRequest from "../api/api.request";
 import appState from "./app.state";
+import apiRequest from "../api/api.request";
 
 class appDate {
   constructor() {
@@ -13,224 +13,61 @@ class appDate {
   hover_day = "";
 
   employees = null;
-  original_employees = null;
   supervisor = null;
   schedule = null;
-  original_visits = [];
   visits = [];
-  original_docs = null;
   docs = null;
-
-  newDocs = {
-    file: null,
-    employer_id: null,
-    description: "",
-    start: "",
-    end: "",
-  };
-
-  setNewDocs = (name, value) => {
-    this.newDocs = { ...this.newDocs, [`${name}`]: value };
-  };
-
-  resetNewDocs = () => {
-    this.newDocs = {
-      ...this.newDocs,
-      file: null,
-      employer_id: null,
-      description: "",
-      start: "",
-      end: "",
-    };
-  };
-
-  createNewDoc = async () => {
-    if (this.newDocs.employer_id === null) {
-      return alert("Не выбран сотрудник");
-    }
-    if (this.newDocs.start === "") {
-      return alert("Не указана дата начала");
-    }
-    if (this.newDocs.end === "") {
-      return alert("Не указана дата окончания");
-    }
-    if (this.newDocs.file === null && this.newDocs.description === "") {
-      return alert("Выберите файл или напишите комментарий");
-    }
-    if (this.newDocs.file !== null) {
-      const formData = new FormData();
-      formData.append("employer_id", this.newDocs.employer_id);
-      formData.append("description", this.newDocs.description);
-      formData.append("start", this.newDocs.start);
-      formData.append("end", this.newDocs.end);
-      formData.append("file", this.newDocs.file);
-      await apiRequest.postDocument(formData);
-      return true;
-    } else {
-      const formData = new FormData();
-      formData.append("employer_id", this.newDocs.employer_id);
-      formData.append("description", this.newDocs.description);
-      formData.append("start", this.newDocs.start);
-      formData.append("end", this.newDocs.end);
-      await apiRequest.postDocumentNoFile(formData);
-      return true;
-    }
-  };
+  unknow_emploees = null;
 
   setParameters = (parametr, value) => {
     this[`${parametr}`] = value;
+    return true;
   };
 
-  createStructureVisits = async (data) => {
-    this.visits = data
-      .sort((a, b) =>
-        a.employer_fullname.localeCompare(b.employer_fullname, "ru")
-      )
-      .filter((df) => df.visits.length !== 0)
-      .map((user) => {
-        const userCopy = { ...user };
-        for (let i = 1; i <= this.days_count; i++) {
-          const day = String(i).padStart(2, "0");
-          const dateStr = `${this.year}-${String(this.mount + 1).padStart(
-            2,
-            "0"
-          )}-${day}`;
-          const hasVisit = userCopy.visits.some(
-            (visit) => visit.date === dateStr
-          );
-          if (!hasVisit) {
-            userCopy.visits.push({
-              date: dateStr,
-              arrival: null,
-              departure: null,
-              result: "absent",
-            });
-          }
-          userCopy.visits.map((v) => {
-            if (v.arrival === null && v.departure === null) {
-              v.late = false;
-              v.left = false;
-            }
-            if (v.result.match(/late/)) {
-              v.late = true;
-            } else {
-              v.late = false;
-            }
-            if (v.result.match(/left/)) {
-              v.left = true;
-            } else {
-              v.left = false;
-            }
+  createStructureVisits = async (data, search) => {
+    this.visits = data.map((user) => {
+      const userCopy = { ...user };
+      for (let i = 1; i <= this.days_count; i++) {
+        const day = String(i).padStart(2, "0");
+        const dateStr = `${this.year}-${String(this.mount + 1).padStart(
+          2,
+          "0"
+        )}-${day}`;
+        const hasVisit = userCopy.visits.find(
+          (visit) => visit.visit_date === dateStr
+        );
+        if (!hasVisit) {
+          userCopy.visits.push({
+            visit_date: dateStr,
+            start_visit: null,
+            end_visit: null,
+            status: "",
+            document: null,
           });
         }
-        userCopy.visits.sort((a, b) => new Date(a.date) - new Date(b.date));
-        return userCopy;
-      });
-    this.original_visits = this.visits;
+      }
+      userCopy.visits.sort(
+        (a, b) => new Date(a.visit_date) - new Date(b.visit_date)
+      );
+      return userCopy;
+    });
+
     appState.setParameters("loadingTimesheet", true);
-    console.log(toJS(this.visits), data);
-  };
-
-  filter_value_employees_name = "";
-  filter_value_docs_name = "";
-  filter_value_employees_id_supervisor = 99999;
-
-  filterName = (data, value) => {
-    if (
-      value.length < 2 &&
-      this.filter_value_employees_id_supervisor === 99999
-    ) {
-      console.log("filterNameEmployess 1");
-      return (this[`${data}`] = this[`original_${data}`]);
-    } else {
-      console.log(value);
-      return (this[`${data}`] = this[`original_${data}`].filter((n) => {
-        const nameMatch =
-          value.length >= 2
-            ? n.employer_fullname.toLowerCase().includes(value.toLowerCase()) ||
-              n.schedule_type.toLowerCase().includes(value.toLowerCase())
-            : true;
-
-        const supervisorMatch =
-          this.filter_value_employees_id_supervisor !== 99999
-            ? Number(n.supervisor_id) ===
-              Number(this.filter_value_employees_id_supervisor)
-            : true;
-        return nameMatch && supervisorMatch;
-      }));
-    }
-    // console.log(data, value);
-    // if (value.length < 2) {
-    //   return (this[`${data}`] = this[`original_${data}`]);
-    // } else {
-    //   console.log(value);
-    //   return (this[`${data}`] = this[`original_${data}`].filter(
-    //     (n) =>
-    //       n.employer_fullname.toLowerCase().includes(value.toLowerCase()) ||
-    //       n.schedule_type.toLowerCase().includes(value.toLowerCase()) ||
-    //       (n.supervisor_fullname !== null &&
-    //         n.supervisor_fullname.toLowerCase().includes(value.toLowerCase()))
-    //   ));
-    // }
-  };
-
-  filterDocs = (data, value) => {
-    console.log(data, value, toJS(this[`original_${data}`]));
-    if (value.length < 2) {
-      return (this[`${data}`] = this[`original_${data}`]);
-    } else {
-      console.log(value);
-      return (this[`${data}`] = this[`original_${data}`].filter(
-        (n) =>
-          n.emploee_name.toLowerCase().includes(value.toLowerCase()) ||
-          n.date_doc.toLowerCase().includes(String(value).toLowerCase()) ||
-          n.description.toLowerCase().includes(value.toLowerCase())
-      ));
+    if (search === "2/2") {
+      this.visits = this.visits.filter(
+        (v) => v.schedule.schedule_type === "2/2"
+      );
     }
   };
 
-  filterNameEmployess = (data) => {
-    console.log(
-      "this.filter_value_employees_id_supervisor",
-      this.filter_value_employees_id_supervisor,
-      this.filter_value_employees_id_supervisor,
-      toJS(this.employees)
-    );
-    if (
-      this.filter_value_employees_name.length < 2 &&
-      this.filter_value_employees_id_supervisor === 99999
-    ) {
-      console.log("filterNameEmployess 1");
-      return (this[`${data}`] = this[`original_${data}`]);
-    } else {
-      console.log(this.filter_value_employees_name);
-      return (this[`${data}`] = this[`original_${data}`].filter((n) => {
-        const nameMatch =
-          this.filter_value_employees_name.length >= 2
-            ? n.first_name
-                .toLowerCase()
-                .includes(this.filter_value_employees_name.toLowerCase()) ||
-              n.last_name
-                .toLowerCase()
-                .includes(this.filter_value_employees_name.toLowerCase())
-            : true;
-
-        const supervisorMatch =
-          this.filter_value_employees_id_supervisor !== 99999
-            ? Number(n.supervisor_id) ===
-              Number(this.filter_value_employees_id_supervisor)
-            : true;
-        return nameMatch && supervisorMatch;
-      }));
-    }
+  filterEmploeesSchedule = (name) => {
+    this.visits = this.visits.filter((v) => v.schedule.schedule_type === name);
   };
 
   createStructureDocs = async (data) => {
     try {
       this.docs = data.map((d) => {
         const docsCopy = { ...d };
-        // docsCopy.start = new Date(docsCopy.start).toLocaleDateString();
-        // docsCopy.end = new Date(docsCopy.end).toLocaleDateString();
         const emploeesID = this.original_employees.find(
           (e) => e.id === d.employer_id
         );
@@ -248,11 +85,39 @@ class appDate {
         }
         return docsCopy;
       });
-      console.log("createStructureDocs", data, this.docs);
       this.original_docs = this.docs;
     } catch (e) {
       console.error(e);
     }
+  };
+
+  updateUnknowList = async (item, update) => {
+    console.log(item);
+    const emploeeID = this.unknow_emploees.find((e) => e.id === item.id);
+    if (emploeeID && update) {
+      console.log(1);
+      emploeeID.first_name = item.lastName;
+      emploeeID.last_name = item.firstName;
+      emploeeID.second_name = item.secondName;
+      emploeeID.schedule_id = Number(item.schedule);
+      emploeeID.service_number = item.serviceNumber;
+      emploeeID.supervisor_id =
+        Number(item.mySupervisor) !== 0 ? Number(item.mySupervisor) : null;
+      emploeeID.is_supervisor = item.isSupervisor;
+      emploeeID.is_archived = item.isActive;
+      emploeeID.time_zone = "Europe/Moscow";
+    }
+    if (emploeeID && !update) {
+      const emploee_id = emploeeID.id;
+      delete emploeeID.id;
+      console.log("emploeeID 2", emploeeID);
+      const res = await apiRequest.postEmployeesID(emploeeID);
+      if (res) {
+        apiRequest.removeUnknowID(emploee_id);
+      }
+      // console.log(emploeeID);
+    }
+    // console.log(emploeeID);
   };
 }
 export default new appDate();

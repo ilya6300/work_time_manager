@@ -9,6 +9,7 @@
   border-bottom: 1px solid var(--my_lite_grey);
   padding: 10px 8px 3px;
   cursor: pointer;
+  justify-content: space-between;
 }
 .list_container_emploees {
   height: 100%;
@@ -23,20 +24,25 @@
   width: 25%;
   display: flex;
   gap: 10px;
+  text-align: end;
 }
 .row_table_employees_schedule {
-  width: 15%;
+  width: 11%;
+  text-align: end;
 }
 .row_table_employees_my_schedule {
-  width: 20%;
+  width: 15%;
+  text-align: end;
 }
 .row_table_employees_active {
   width: 15%;
   display: flex;
   justify-content: center;
+  text-align: end;
 }
 .row_table_employees_tools {
-  width: 10%;
+  width: 8%;
+  text-align: end;
 }
 .list_table_employees {
   display: flex;
@@ -58,4 +64,8 @@
   gap: 15px;
   margin-right: 15px;
   height: 100%;
+}
+.row_title_unknow_emploees {
+  color: var(--my_lite_grey);
+  padding: 2vw;
 }

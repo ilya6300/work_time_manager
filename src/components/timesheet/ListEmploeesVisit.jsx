@@ -6,15 +6,14 @@ import appDate from "../../service/state/app.date";
 import appState from "../../service/state/app.state";
 
 export const ListEmploeesVisit = observer(({ workCalendar }) => {
-  if (appDate.original_visits.length) {
+  if (appDate.visits.length) {
     return (
       <div
-      // className="name_visitor_row_list"
       >
         <Calendar workCalendar={workCalendar} />
         {appState.loadingTimesheet ? (
           appDate.visits.map((v) => (
-            <ItemEmploeesVisit v={v} key={v.employer_id} />
+            <ItemEmploeesVisit v={v} key={v.id} />
           ))
         ) : (
           <div className="grey_message_container">

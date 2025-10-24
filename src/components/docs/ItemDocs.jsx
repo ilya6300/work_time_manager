@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import apiRequest from "../../service/api/api.request";
-import { saveAs } from "file-saver";
-import BackFixModal from "../../ui/modal/BackFixModal";
-import BtnVer1 from "../../ui/btn/BtnVer1";
 
 export const ItemDocs = (props) => {
   return (
@@ -10,26 +6,16 @@ export const ItemDocs = (props) => {
       onClick={() => props.modalCardVisible(props.d)}
       className="row_table_schedule hover_row_v1"
     >
-      <span className="row_table_schedule_25">{props.d.emploee_name}</span>
-      <label className="row_table_schedule_30">
-        <span>
-          c: {new Date(props.d.start).toLocaleDateString()},{" "}
-          {new Date(props.d.start).toLocaleTimeString().replace(/:\d\d$/, "")}{" "}
-          по:{" "}
-        </span>
-        <span>
-          {new Date(props.d.end).toLocaleDateString()},{" "}
-          {new Date(props.d.start).toLocaleTimeString().replace(/:\d\d$/, "")}
-        </span>
-      </label>
+      <span className="row_table_docs_20">
+        {props.d.employer?.last_name} {props.d.employer?.first_name}{" "}
+        {props.d.employer?.second_name}
+      </span>
+      <span className="row_table_docs_10">{props.d.doc_type}</span>
+      <span className="row_table_schedule_30">
+        {props.d.start} {props.d.end}
+      </span>
 
-      <span className="row_table_schedule_45">{props.d.description}</span>
-      {/* <span
-        className="row_table_schedule_10 download_btn"
-        onClick={downloadDoc}
-      >
-        Скачать
-      </span> */}
+      <span className="row_table_docs_40">{props.d.comment}</span>
     </li>
   );
 };

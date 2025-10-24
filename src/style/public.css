@@ -107,3 +107,26 @@
   left: 40px;
   bottom: 20px;
 }
+.alert_container {
+  position: fixed;
+  left: 25px;
+  top: 15px;
+}
+.alert {
+  cursor: pointer;
+  width: 30px;
+  animation: anim_alert 3s cubic-bezier(0, 0, 0.67, 0.85) infinite;
+}
+
+@keyframes anim_alert {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-30deg);
+  }
+  75% {
+    transform: rotate(30deg);
+  }
+}

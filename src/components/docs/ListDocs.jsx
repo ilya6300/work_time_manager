@@ -18,16 +18,16 @@ const ListDocs = observer(({ modalCardVisible }) => {
         className="row_table_schedule row_table_schedule_title static_header_row"
         style={{ top: "55px" }}
       >
-        <span className="row_table_schedule_25">Сотрудник</span>
+        <span className="row_table_docs_20">Сотрудник</span>
+        <span className="row_table_docs_10">Докумумент</span>
         <label className="row_table_schedule_30">Период заявления</label>
 
-        <span className="row_table_schedule_45">Описания</span>
-        {/* <span className="row_table_schedule_10">Скачать</span> */}
+        <span className="row_table_docs_40">Описания</span>
       </li>
       {appDate.docs !== null ? (
         <>
           {appDate.docs.map((d) => (
-            <ItemDocs modalCardVisible={modalCardVisible} key={d.id} d={d} />
+            <ItemDocs modalCardVisible={modalCardVisible} key={d.doc_number} d={d} />
           ))}
         </>
       ) : (

@@ -29,22 +29,24 @@ export const ListTableEmployees = observer(
         </div>
         <ul className="list_table_employees ">
           <li className="row_table_employees header_list static_header_row">
-            <span className="row_table_employees_name">ФИО</span>
+            <span className="row_table_employees_name table_center">ФИО</span>
 
-            <span className="row_table_employees_schedule">График</span>
-            <span className="row_table_employees_my_schedule">
+            <span className="row_table_employees_schedule table_center">
+              График
+            </span>
+            <span className="row_table_employees_my_schedule table_center">
               Руководитель
             </span>
-            <span className="row_table_employees_my_schedule">
+            <span className="row_table_employees_my_schedule table_center">
               Табель-номер
             </span>
-            <label className="row_table_employees_active">
+            <label className="row_table_employees_active table_center">
               Является руководителем
             </label>
-            <label className="row_table_employees_active">
+            <label className="row_table_employees_active table_center">
               Активен (Работает)
             </label>
-            <span>Инструменты</span>
+            <span className="table_center">Инструменты</span>
           </li>
           {appDate.employees.map((e) => (
             <ItemRowEmployees

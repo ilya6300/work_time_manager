@@ -178,11 +178,12 @@ export const NewDocs = observer(({ setNewDocs, data }) => {
         {navBtn.find((btn) => btn.name === "new" && btn.active) ? (
           <>
             <datalist className="datalist" id="listEmploees">
-              <option defaultValue hidden>
+              <option className="datalist" defaultValue hidden>
                 Выберите сотрудника
               </option>
               {appDate.employees.map((s) => (
                 <option
+                  className="datalist"
                   value={`${s.last_name} ${s.first_name}`}
                   key={s.id}
                 ></option>

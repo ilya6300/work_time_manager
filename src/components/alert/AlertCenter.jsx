@@ -12,6 +12,7 @@ export const AlertCenter = () => {
         src={iconAlert}
         alt="Оповещение"
       />
+      <span className="alert_hover">Имеются незанесённые сотрудники</span>
     </div>
   );
 };

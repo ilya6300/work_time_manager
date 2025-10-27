@@ -8,8 +8,51 @@
   font-size: var(--f0);
   border: 1px solid var(--main_blue_1);
   width: 130px;
-
   padding: 8px 0 3px;
   text-align: center;
   border-radius: 3px;
+}
+.alert_container {
+  position: fixed;
+  left: 25px;
+  top: 15px;
+}
+.alert {
+  /* position: relative; */
+  cursor: pointer;
+  width: 30px;
+  animation: anim_alert 3s cubic-bezier(0, 0, 0.67, 0.85) infinite;
+}
+.alert_container:hover > .alert_hover {
+  animation: anim_visible_alert_hover 1s ease-in-out forwards;
+}
+.alert_hover {
+  background: var(--my_lite_grey);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 6px;
+  position: absolute;
+  text-wrap: nowrap;
+  left: 45px;
+  top: 0;
+  /* opacity: 0; */
+  animation: anim_hidden_alert_hover 1s ease-in-out forwards;
+
+  /* display: none; */
+}
+@keyframes anim_visible_alert_hover {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes anim_hidden_alert_hover {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

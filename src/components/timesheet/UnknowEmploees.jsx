@@ -37,18 +37,26 @@ export const UnknowEmploees = observer(() => {
           по незаведённым сотрудникам вестись не будет. Сохраните их.
         </li>
         <li className="row_table_employees header_list static_header_row">
-          <span className="row_table_employees_name">ФИО</span>
+          <span className="row_table_employees_name table_center">ФИО</span>
 
-          <span className="row_table_employees_schedule">График</span>
-          <span className="row_table_employees_my_schedule">Руководитель</span>
-          <span className="row_table_employees_my_schedule">Табель-номер</span>
-          <label className="row_table_employees_active">
+          <span className="row_table_employees_schedule table_center">
+            График
+          </span>
+          <span className="row_table_employees_my_schedule table_center">
+            Руководитель
+          </span>
+          <span className="row_table_employees_my_schedule table_center">
+            Табель-номер
+          </span>
+          <label className="row_table_employees_active table_center">
             Является руководителем
           </label>
-          <label className="row_table_employees_active">
+          <label className="row_table_employees_active table_center">
             Активен (Работает)
           </label>
-          <span>Инструменты</span>
+          <span className="row_table_employees_tools table_center">
+            Инструменты
+          </span>
         </li>
         {appDate.unknow_emploees.map((e) => (
           <ItemUnknowEmploees

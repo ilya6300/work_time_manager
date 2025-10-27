@@ -107,15 +107,11 @@
   left: 40px;
   bottom: 20px;
 }
-.alert_container {
-  position: fixed;
-  left: 25px;
-  top: 15px;
-}
-.alert {
-  cursor: pointer;
-  width: 30px;
-  animation: anim_alert 3s cubic-bezier(0, 0, 0.67, 0.85) infinite;
+
+
+.table_center {
+  display: inline-block !important;
+  text-align: center !important;
 }
 
 @keyframes anim_alert {

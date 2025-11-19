@@ -75,6 +75,7 @@ export const NewDocs = observer(({ setNewDocs, data }) => {
         "Дата начала заявления не может быть равной или больше даты окончания заявления"
       );
     }
+    console.log(data);
 
     const res = await apiRequest.postDocument({
       comment: newDoc.comment !== "" ? newDoc.comment : null,
@@ -84,43 +85,13 @@ export const NewDocs = observer(({ setNewDocs, data }) => {
       start: `${!data ? dateDoc : data.visit_date}T${newDoc.start}:00`,
     });
     if (res) {
-      if (data) {
+      const resVisits = await apiRequest.getVisitsID(data.id);
+      if (resVisits) {
         data.setFuncEmploee({
           ...data.emploee,
           visits: data.emploee.visits.map((v) => {
             if (v.visit_date === data.visit_date) {
-              const visitStart = v.start_visit;
-              const visitEnd = v.end_visit;
-              const resStart = String(res.data.start.match(/\d\d:\d\d/));
-              const resEnd = String(res.data.end.match(/\d\d:\d\d/));
-              return {
-                ...v,
-                start_visit:
-                  Number(`${resStart}`.replace(/:/gm, "")) <=
-                  Number(`${data.emploee.schedule.start}`.replace(/:/gm, ""))
-                    ? `${resStart}:00`
-                    : visitStart,
-                end_visit:
-                  Number(`${resEnd}`.replace(/:/gm, "")) <=
-                  Number(`${visitEnd}`.replace(/:/gm, ""))
-                    ? visitEnd
-                    : `${resEnd}:00`,
-                status:
-                  (Number(`${resStart}`.replace(/:/gm, "")) <=
-                    Number(
-                      `${data.emploee.schedule.start}`.replace(/:/gm, "")
-                    ) ||
-                    Number(`${visitStart}`.replace(/:/gm, "")) <=
-                      Number(
-                        `${data.emploee.schedule.start}`.replace(/:/gm, "")
-                      )) &&
-                  (Number(`${resEnd}`.replace(/:/gm, "")) >=
-                    Number(`${data.emploee.schedule.end}`.replace(/:/gm, "")) ||
-                    Number(`${visitEnd}`.replace(/:/gm, "")) >=
-                      Number(`${data.emploee.schedule.end}`.replace(/:/gm, "")))
-                    ? v.status
-                    : "valid",
-              };
+              v.status = resVisits.status;
             }
             return v;
           }),

@@ -4,6 +4,7 @@ import appDate from "../../service/state/app.date";
 import { ItemUnknowEmploees } from "./ItemUnknowEmploees";
 import BtnVer1 from "../../ui/btn/BtnVer1";
 import { useNavigate } from "react-router";
+import apiRequest from "../../service/api/api.request";
 
 export const UnknowEmploees = observer(() => {
   const saveItemAll = () => {
@@ -63,6 +64,7 @@ export const UnknowEmploees = observer(() => {
             key={e.id}
             e={e}
             saveItem={() => appDate.updateUnknowList(e)}
+            removeItem={() => apiRequest.removeUnknowID(e.id)}
           />
         ))}
         <li className="btn_container_modal">

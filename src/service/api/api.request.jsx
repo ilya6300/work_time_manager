@@ -46,9 +46,7 @@ class apiRequest {
     try {
       const res = await req.delete(`employee/${id}`);
       if (res) {
-        setTimeout(async () => {
-          await this.getEmpoyeesList(false);
-        }, 1000);
+        appDate.setParameters("employees", await this.getEmpoyeesList(false));
       }
     } catch (e) {
       console.error(e);
@@ -120,6 +118,18 @@ class apiRequest {
       console.error(e);
     }
   };
+
+  getVisitsID = async (id) => {
+    try {
+      const res = await req(`visit/${id}`);
+      if (res.status === 200) {
+        console.log(res.data);
+        return res.data;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   // Документы
 
   postDocument = async (data) => {
@@ -134,9 +144,23 @@ class apiRequest {
     }
   };
 
-  getDocuments = async () => {
+  getDocuments = async (name, start_date, end_date) => {
     try {
-      const res = await req("document");
+      console.log(
+        "getDocuments",
+        name,
+        start_date,
+        end_date,
+        `document?${
+          name !== "" ? "search=" + encodeURIComponent(name) : ""
+        }start_date=${start_date}&end_date=${end_date}`
+      );
+      const res = await req(
+        `document?${
+          name !== "" ? "search=" + encodeURIComponent(name) + "&" : ""
+        }start_date=${start_date}&end_date=${end_date}`
+      );
+      console.log(res);
       if (res) {
         appDate.setParameters("docs", res.data);
         return true;

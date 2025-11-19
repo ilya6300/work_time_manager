@@ -31,7 +31,6 @@ export const NewEmployees = ({ setNewEmploees }) => {
 
   const [newEmploeesObj, setNewEmploeeys] = useState({
     first_name: "",
-    second_name: "",
     last_name: "",
     schedule_id: 0,
     supervisor_id: null,
@@ -51,6 +50,17 @@ export const NewEmployees = ({ setNewEmploees }) => {
     setArhive(!arhive);
   };
 
+  const secondNameChange = (e) => {
+    if (e.target.value !== "") {
+      setNewEmploeeys({ ...newEmploeesObj, second_name: e.target.value });
+    } else {
+      setNewEmploeeys((prevState) => {
+        const { second_name, ...rest } = prevState;
+        return rest;
+      });
+    }
+  };
+
   const createNewEmployees = async () => {
     if (newEmploeesObj.first_name === "" || !newEmploeesObj.first_name) {
       return alert("Не указано имя сотрудника");
@@ -65,7 +75,6 @@ export const NewEmployees = ({ setNewEmploees }) => {
       return alert("Не указан табель сотрудника");
     }
     if (newEmploeesObj.second_name === "" || !newEmploeesObj.second_name) {
-      setNewEmploeeys({ ...newEmploeesObj, second_name: "" });
     }
     if (newEmploeesObj.supervisor_id === undefined) {
       setNewEmploeeys({ ...newEmploeesObj, supervisor_id: null });
@@ -92,10 +101,8 @@ export const NewEmployees = ({ setNewEmploees }) => {
       <Input_v1
         title="Отчество (не обязательно)"
         placeholder="Иванович"
-        onChange={(e) =>
-          setNewEmploeeys({ ...newEmploeesObj, second_name: e.target.value })
-        }
-        value={newEmploeesObj.second_name}
+        onChange={secondNameChange}
+        value={newEmploeesObj.second_name || ""}
       />
       <Input_v1
         title="Фамилия"

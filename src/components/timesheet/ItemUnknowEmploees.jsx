@@ -4,6 +4,7 @@ import { Input_v2 } from "../../ui/input/Input_v2";
 import appDate from "../../service/state/app.date";
 import { MyBtnCheckActive } from "../../ui/input/MyBtnCheckActive";
 import saveEdit from "../../img/icon/save.png";
+import removeIcon from "../../img/icon/remove_red.png";
 
 export const ItemUnknowEmploees = observer((props) => {
   const [emploees, setEmploees] = useState({
@@ -112,6 +113,12 @@ export const ItemUnknowEmploees = observer((props) => {
         <img
           onClick={() => props.saveItem(props.e)}
           src={saveEdit}
+          className="edit_icon"
+          alt="Сохранить"
+        />
+        <img
+          onClick={() => props.removeItem(props.e)}
+          src={removeIcon}
           className="edit_icon"
           alt="Удалить"
         />

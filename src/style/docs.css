@@ -8,15 +8,16 @@
 }
 .btn_upload {
   cursor: pointer;
-  border: 2px solid white;
-  width: 100%;
-  background: var(--main_blue_1);
+  /* border: 2px solid white; */
+  width: 48px;
+  height: 32px;
+  /* background: var(--main_blue_1);
   color: white;
   font-size: large;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease; */
 }
-.btn_upload_container {
+/* .btn_upload_container {
   cursor: pointer;
   padding: 2px;
   text-align: center;
@@ -26,7 +27,7 @@
   border-radius: 4px;
   display: flex;
   justify-content: space-between;
-}
+} */
 .list_table_docs {
   max-width: 1600px;
   margin: auto;

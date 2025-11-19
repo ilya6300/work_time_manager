@@ -180,9 +180,13 @@ export const ItemEmploeesVisit = observer((props) => {
                     >
                       <li>{result(d)}</li>
                       <li>{img.doc_type}</li>
-                      <li>{img.start}</li>
-                      <li>{img.end}</li>
-                      <li>{img.comment}</li>
+                      <li> - {img.doc_number}</li>
+                      <li> - {img.start}</li>
+                      <li> - {img.end}</li>
+                      <li>
+                        {" "}
+                        {img.comment ? "-" : ""} {img.comment}
+                      </li>
                       <br />
                     </ul>
                   ))}

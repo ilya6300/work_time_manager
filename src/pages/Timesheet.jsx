@@ -12,7 +12,6 @@ export const Timesheet = observer(() => {
   const currentYear = currentDate.getFullYear();
   const [loadMonth, setLoadMonth] = useState(false);
 
-
   const [workCalendar, setWorkCalendar] = useState([]);
 
   const [monthDate, setMonthDate] = useState([
@@ -107,11 +106,7 @@ export const Timesheet = observer(() => {
   const getActiveDate = () => {
     if (currentYear === Number(appDate.year)) {
       setMonthDate((prevMonthDate) =>
-        prevMonthDate.map((month) =>
-          month.id > currentMonth
-            ? { ...month, active: false }
-            : { ...month, active: true }
-        )
+        prevMonthDate.map((month) => ({ ...month, active: true }))
       );
     } else {
       setMonthDate(

@@ -5,12 +5,14 @@ import appDate from "../../service/state/app.date";
 import apiRequest from "../../service/api/api.request";
 
 const DateFilter = observer(({ selectedMonth, monthDate }) => {
-  const yearData = ["2025", "2024"];
+  const yearData = ["2028", "2027", "2026", "2025", "2024"];
 
   const changeYear = (e) => {
     appDate.setParameters("year", e.target.value);
     appDate.setParameters("visits", []);
   };
+
+
 
   const [filterValue, setFilterValue] = useState("");
   const [filterSupervisor, setFilterSupervisor] = useState("");
